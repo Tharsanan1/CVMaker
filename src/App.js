@@ -1,26 +1,19 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import DashBoard from './Components/DashBoard';
+import {makeSentence, makeBulletSentence, makeBulletSentences} from './utils/SentenceMaker';
+
 
 function App() {
+  // elements.push(...makeSentence(150, 20, "Sentence\nSecond sentence", 10, "red", 10, "LatoWeb", "bold"));
+  
+  // elements.push(...makeBulletSentences(150, 150, "Sentence*s*Second sentence with new line*s*Second sentence", 10, 20, "red", "black", 10, "LatoWeb", "bold"));
+  
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <DashBoard/>
     </div>
   );
 }
 
 export default App;
+// (x, y, sentence, lineHeigth, color, fontSize, fontCat, fontStyle)
