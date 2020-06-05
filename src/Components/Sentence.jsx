@@ -2,7 +2,9 @@ import React from "react";
 import { SketchPicker } from 'react-color';
 import Popover from "@material-ui/core/Popover";
 import Types from '../utils/Types';
-
+import Dropdown from 'react-dropdown';
+import 'react-dropdown/style.css';
+ 
 const DIRECTION = {
     UP : "UP",
     DOWN : "DOWN",
@@ -15,6 +17,10 @@ const SIZE = {
     INCREASE : "INCREASE",
     DECREASE : "DECREASE"
 }
+
+const options = [
+  'one', 'two', 'three'
+];
 
 export default class Sentence extends React.Component{
     constructor(props){
@@ -117,7 +123,7 @@ export default class Sentence extends React.Component{
 
     render(){
         return(
-            <div>
+            <div style= {{border: "10px solid black", margin: "10px", position: "relative"}} ref = {this.props.reff}>
                 <button style={{ margin: "20px" }} className="btn btn-primary"  onClick={e => this.handleClick(e)}>Pick Color</button>
                 <Popover 
                     id="PopOver1"
@@ -138,15 +144,15 @@ export default class Sentence extends React.Component{
                         onChangeComplete={ this.handleChangeComplete }
                     />
                 </Popover>
-                <div class="input-group">
+                <div class="input-group" style={{ margin: "20px" }}>
                     <div class="input-group-prepend">
                         <span class="input-group-text">Sentence</span>
                     </div>
-                    <textarea class="form-control" onChange={this.handleSentenceChange}>{this.props.payload.sentences}</textarea>
+                    <textarea class="form-control" onChange={this.handleSentenceChange} value={this.props.payload.sentences}/>
                 </div>
                 <br/>
                 <div>
-                    <div class="input-group input-group-sm mb-3">
+                    <div class="input-group input-group-sm mb-3" style={{ margin: "20px" }}>
                         <div class="input-group-prepend">
                             <span class="input-group-text" id="inputGroup-sizing-sm">Font size</span>
                         </div>
@@ -155,7 +161,7 @@ export default class Sentence extends React.Component{
                     <button style={{ margin: "20px" }} className="btn btn-primary" onClick={() => {this.handleFontSizeClick(SIZE.INCREASE)}}>Increase</button>
                     <button style={{ margin: "20px" }} className="btn btn-primary" onClick={() => {this.handleFontSizeClick(SIZE.DECREASE)}}>Decrease</button>
                     
-                    <div class="input-group input-group-sm mb-3">
+                    <div class="input-group input-group-sm mb-3" style={{ margin: "20px" }}>
                         <div class="input-group-prepend">
                             <span class="input-group-text" id="inputGroup-sizing-sm">Font size</span>
                         </div>
@@ -164,21 +170,29 @@ export default class Sentence extends React.Component{
                     <button style={{ margin: "20px" }} className="btn btn-primary" onClick={() => {this.handleLineHeightClick(SIZE.INCREASE)}}>Increase Line Height</button>
                     <button style={{ margin: "20px" }} className="btn btn-primary" onClick={() => {this.handleLineHeightClick(SIZE.DECREASE)}}>Decrease Line Height</button>
                     
-
-                    <div class="input-group input-group-sm mb-3">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text" id="inputGroup-sizing-sm">Step size</span>
-                        </div>
-                        <input type="text"  aria-label="Small" aria-describedby="inputGroup-sizing-sm" onChange={this.handleStepSizeChange} value={this.state.stepSize}/>
+                    <div style={{ margin: "20px" }}>
+                        <Dropdown options={options} onChange={this._onSelect} value={this.props.fontCat} placeholder="Select Font" />
                     </div>
-                    
-                    <button style={{ margin: "20px" }} className="btn btn-primary" onClick={() => {this.handleStepClick(DIRECTION.UP)}}>UP</button>
-                    <button style={{ margin: "20px" }} className="btn btn-primary" onClick={() => {this.handleStepClick(DIRECTION.LEFT)}}>LEFT</button>
-                    <button style={{ margin: "20px" }} className="btn btn-primary" onClick={() => {this.handleStepClick(DIRECTION.RIGHT)}}>RIGHT</button>
-                    <button style={{ margin: "20px" }} className="btn btn-primary" onClick={() => {this.handleStepClick(DIRECTION.DOWN)}}>DOWN</button>
-                    {Types.SENTENCE === this.props.type ? <button style={{ margin: "20px" }} className="btn btn-primary" onClick={() => {this.handleStepClick(DIRECTION.CENTER_X)}}>Center_X</button> : <div/>}
+                    <br/>
 
+                    <div>
+                        <div class="input-group input-group-sm mb-3" style={{ margin: "20px" }}>
+                            <div class="input-group-prepend" >
+                                <span class="input-group-text" id="inputGroup-sizing-sm">Step size</span>
+                            </div>
+                            <input type="text"  aria-label="Small" aria-describedby="inputGroup-sizing-sm" onChange={this.handleStepSizeChange} value={this.state.stepSize}/>
+                        </div>
+                        
+                        <button style={{ margin: "20px" }} className="btn btn-primary" onClick={() => {this.handleStepClick(DIRECTION.UP)}}>UP</button>
+                        <button style={{ margin: "20px" }} className="btn btn-primary" onClick={() => {this.handleStepClick(DIRECTION.LEFT)}}>LEFT</button>
+                        <button style={{ margin: "20px" }} className="btn btn-primary" onClick={() => {this.handleStepClick(DIRECTION.RIGHT)}}>RIGHT</button>
+                        <button style={{ margin: "20px" }} className="btn btn-primary" onClick={() => {this.handleStepClick(DIRECTION.DOWN)}}>DOWN</button>
+                        {Types.SENTENCE === this.props.type ? <button style={{ margin: "20px" }} className="btn btn-primary" onClick={() => {this.handleStepClick(DIRECTION.CENTER_X)}}>Center_X</button> : <div/>}
+                    </div>
                 </div>
+
+                <button style={{ margin: "20px", position: "absolute", top: "0px", right: "0px" }} className="btn btn-danger" onClick={() => {this.props.delete(this.props.index)}}>Delete</button>
+                    
             </div>
         );
     }

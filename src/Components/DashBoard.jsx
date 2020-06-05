@@ -9,28 +9,13 @@ export default class DashBoard extends React.Component{
     constructor(props){
         super(props);
         this.state = {
-            elements : [
-            //     {
-            //     id : 0,
-            //     type: Types.BULLET_PARA,
-            //     payload: {
-            //         x: 100,
-            //         y : 100, 
-            //         sentencePara : "sentence pars", 
-            //         lineHeigth : 20, 
-            //         sentenceHeigth : 20, 
-            //         color : "red", 
-            //         bulletColor : "black", 
-            //         fontSize : 20, 
-            //         fontCat : "LatoWeb", 
-            //         fontStyle : "bold"
-            //     }
-            // }
-            ]
+            elements : []
         }
 
         this.addElement = this.addElement.bind(this);
         this.updatePayload = this.updatePayload.bind(this);
+        this.delete = this.delete.bind(this);
+        this.mouseClickedOn = this.mouseClickedOn.bind(this);
     }
 
     addElement(type){
@@ -40,6 +25,7 @@ export default class DashBoard extends React.Component{
             let element = {
                 id : id,
                 type: Types.BULLET_PARA,
+                reff: React.createRef(),
                 payload: {
                     x: 10,
                     y : 100, 
@@ -59,6 +45,7 @@ export default class DashBoard extends React.Component{
             let element = {
                 id : id,
                 type: Types.SENTENCE,
+                reff: React.createRef(),
                 payload: {
                     x: 10,
                     y : 200, 
@@ -73,18 +60,46 @@ export default class DashBoard extends React.Component{
             }
             elements.push(element);
         }
-        console.log(elements);
         this.setState({elements:elements});
     }
 
     updatePayload(id, payload){
         let elements = this.state.elements;
         let index = elements.findIndex((element => element.id == id));
-        console.log(index, elements,id,payload);
         elements[index].payload = payload;
         this.setState({
             elements : elements
         });
+    }
+
+    delete(id){
+        let elements = this.state.elements;
+        let index = elements.findIndex((element => element.id == id));
+        elements.splice(index, 1);
+        this.setState({
+            elements : elements
+        });
+    }
+
+    mouseClickedOn(x,y){
+        
+        let closerElement = null;
+        let minDistance = window.innerWidth * 100;
+        this.state.elements.forEach(element => {
+            let distance = Math.sqrt(Math.pow(element.payload.x - x, 2) + Math.pow(element.payload.y - y, 2));
+            console.log(distance);
+            if(distance < minDistance){
+                minDistance = distance;
+                closerElement = element;
+            }
+        });
+        console.log(x,y,closerElement);
+        if(closerElement !== null){
+            closerElement.reff.current.scrollIntoView({
+                behavior: 'smooth',
+                block: 'start',
+            });
+        }
     }
 
     render(){
@@ -102,7 +117,7 @@ export default class DashBoard extends React.Component{
         return(
             <div>
                 <div style = {{width : window.innerWidth + "px", height: window.innerHeight/2 + "px", overflowY:"auto"}}>
-                    <CV elements={elements}/>
+                    <CV elements={elements} mouseClickedOn = {this.mouseClickedOn}/>
                 </div>
                 <div style = {{width : window.innerWidth + "px", height: window.innerHeight/2 + "px", overflowY:"auto"}}>
                     <div>
@@ -110,9 +125,9 @@ export default class DashBoard extends React.Component{
                         <button style={{ margin: "20px" }} className="btn btn-primary" onClick = {() => this.addElement(Types.BULLET_PARA)}>Bullet Sentences</button>
                     </div>
                     <div>
-                        {this.state.elements.map(element => {
+                        {this.state.elements.reverse().map(element => {
                             // if(element.type === Types.SENTENCE){
-                                return (<Sentence key={element.id} index={element.id} type = {element.type} payload = {element.payload} updatePayload = {this.updatePayload}/>);
+                                return (<Sentence key={element.id} reff={element.reff} index={element.id} type = {element.type} payload = {element.payload} updatePayload = {this.updatePayload} delete = {this.delete}/>);
                             // }
                             // else if(element.type === Types.BULLET_PARA){
                             //     return (<BulletSentences key= {element.id} index={element.id} payload = {element.payload} updatePayload = {this.updatePayload}/>);

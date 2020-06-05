@@ -78,6 +78,7 @@ class CV extends React.Component {
       width: 800,
       height: 800,
     };
+    this.getCursorPosition = this.getCursorPosition.bind(this);
   }
 
   componentWillReceiveProps(props){
@@ -100,15 +101,26 @@ class CV extends React.Component {
     // Normalize coordinate system to use css pixels.
     context.scale(scale, scale);
     context.clearRect(0, 0, canvas.width, canvas.height);
-    console.log(PIXEL_RATIO);
     //context.setTransform(PIXEL_RATIO, 0, 0, PIXEL_RATIO, 0, 0);
     this.props.elements.forEach(element => {
         addElement(element, context);
     });
   }
 
+  getCursorPosition(canvas, event) {
+    
+}
+
   componentDidMount() {
     const canvas = this.canvas.current;
+
+    canvas.addEventListener('mousedown', (e) => {
+      const rect = canvas.getBoundingClientRect()
+      const x = e.clientX - rect.left
+      const y = e.clientY - rect.top
+      this.props.mouseClickedOn(x,y);
+    })
+
     const context = canvas.getContext("2d");
     // Set display size (css pixels).
     const sizeW = window.innerWidth;
@@ -124,7 +136,6 @@ class CV extends React.Component {
     // Normalize coordinate system to use css pixels.
     context.scale(scale, scale);
     context.clearRect(0, 0, canvas.width, canvas.height);
-    console.log(PIXEL_RATIO);
     //context.setTransform(PIXEL_RATIO, 0, 0, PIXEL_RATIO, 0, 0);
     this.props.elements.forEach(element => {
         addElement(element, context);
@@ -132,7 +143,6 @@ class CV extends React.Component {
   }
 
   render() {
-    console.log("cv rendering", this.props.elements);
     return (
       <div>
         <canvas
