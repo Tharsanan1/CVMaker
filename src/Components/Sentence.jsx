@@ -11,6 +11,11 @@ const DIRECTION = {
     CENTER_X : "CENTER_X"
 }
 
+const SIZE = {
+    INCREASE : "INCREASE",
+    DECREASE : "DECREASE"
+}
+
 export default class Sentence extends React.Component{
     constructor(props){
         super(props);
@@ -22,6 +27,10 @@ export default class Sentence extends React.Component{
         this.handleStepClick = this.handleStepClick.bind(this);
         this.handleStepSizeChange = this.handleStepSizeChange.bind(this);
         this.handleSentenceChange = this.handleSentenceChange.bind(this);
+        this.handleFontSizeChange = this.handleFontSizeChange.bind(this);
+        this.handleFontSizeClick = this.handleFontSizeClick.bind(this);
+        this.handleLineHeightClick = this.handleLineHeightClick.bind(this);
+        
     }
 
     handleChangeComplete = (color) => {
@@ -44,6 +53,12 @@ export default class Sentence extends React.Component{
         this.setState({
             stepSize : e.target.value
         })
+    }
+
+    handleFontSizeChange(e){
+        let payload = this.props.payload;
+        payload.fontSize = e.target.value;
+        this.props.updatePayload(this.props.index, payload);
     }
 
     handleSentenceChange(e){
@@ -70,6 +85,34 @@ export default class Sentence extends React.Component{
             payload.isXCentered = !payload.isXCentered;
         }   
         this.props.updatePayload(this.props.index, payload)
+    }
+
+    handleFontSizeClick(action){
+        if(action === SIZE.INCREASE){
+            this.handleFontSizeChange({
+                target : {
+                    value : this.props.payload.fontSize + 1
+                }
+            });
+        }
+        else if(action === SIZE.DECREASE){
+            this.handleFontSizeChange({
+                target : {
+                    value : this.props.payload.fontSize - 1
+                }
+            });
+        }
+    }
+
+    handleLineHeightClick(action){
+        let payload = this.props.payload;
+        if(action === SIZE.INCREASE){
+            payload.lineHeigth = payload.lineHeigth + 1;
+        }
+        else if(action === SIZE.DECREASE){
+            payload.lineHeigth = payload.lineHeigth - 1;
+        }
+        this.props.updatePayload(this.props.index, payload);
     }
 
     render(){
@@ -105,10 +148,30 @@ export default class Sentence extends React.Component{
                 <div>
                     <div class="input-group input-group-sm mb-3">
                         <div class="input-group-prepend">
+                            <span class="input-group-text" id="inputGroup-sizing-sm">Font size</span>
+                        </div>
+                        <input type="text"  aria-label="Small" aria-describedby="inputGroup-sizing-sm" onChange={this.handleFontSizeChange} value={this.props.payload.fontSize}/>
+                    </div>
+                    <button style={{ margin: "20px" }} className="btn btn-primary" onClick={() => {this.handleFontSizeClick(SIZE.INCREASE)}}>Increase</button>
+                    <button style={{ margin: "20px" }} className="btn btn-primary" onClick={() => {this.handleFontSizeClick(SIZE.DECREASE)}}>Decrease</button>
+                    
+                    <div class="input-group input-group-sm mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="inputGroup-sizing-sm">Font size</span>
+                        </div>
+                        <input type="text"  aria-label="Small" aria-describedby="inputGroup-sizing-sm" onChange={this.handleFontSizeChange} value={this.props.payload.fontSize}/>
+                    </div>
+                    <button style={{ margin: "20px" }} className="btn btn-primary" onClick={() => {this.handleLineHeightClick(SIZE.INCREASE)}}>Increase Line Height</button>
+                    <button style={{ margin: "20px" }} className="btn btn-primary" onClick={() => {this.handleLineHeightClick(SIZE.DECREASE)}}>Decrease Line Height</button>
+                    
+
+                    <div class="input-group input-group-sm mb-3">
+                        <div class="input-group-prepend">
                             <span class="input-group-text" id="inputGroup-sizing-sm">Step size</span>
                         </div>
                         <input type="text"  aria-label="Small" aria-describedby="inputGroup-sizing-sm" onChange={this.handleStepSizeChange} value={this.state.stepSize}/>
                     </div>
+                    
                     <button style={{ margin: "20px" }} className="btn btn-primary" onClick={() => {this.handleStepClick(DIRECTION.UP)}}>UP</button>
                     <button style={{ margin: "20px" }} className="btn btn-primary" onClick={() => {this.handleStepClick(DIRECTION.LEFT)}}>LEFT</button>
                     <button style={{ margin: "20px" }} className="btn btn-primary" onClick={() => {this.handleStepClick(DIRECTION.RIGHT)}}>RIGHT</button>
