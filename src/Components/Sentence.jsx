@@ -1,12 +1,14 @@
 import React from "react";
 import { SketchPicker } from 'react-color';
 import Popover from "@material-ui/core/Popover";
+import Types from '../utils/Types';
 
 const DIRECTION = {
     UP : "UP",
     DOWN : "DOWN",
     RIGHT : "RIGHT",
-    LEFT : "LEFT"
+    LEFT : "LEFT",
+    CENTER_X : "CENTER_X"
 }
 
 export default class Sentence extends React.Component{
@@ -63,6 +65,9 @@ export default class Sentence extends React.Component{
         }
         else if(direction === DIRECTION.LEFT){
             payload.x = payload.x - +this.state.stepSize;
+        } 
+        else if(direction === DIRECTION.CENTER_X){
+            payload.isXCentered = !payload.isXCentered;
         }   
         this.props.updatePayload(this.props.index, payload)
     }
@@ -108,6 +113,7 @@ export default class Sentence extends React.Component{
                     <button style={{ margin: "20px" }} className="btn btn-primary" onClick={() => {this.handleStepClick(DIRECTION.LEFT)}}>LEFT</button>
                     <button style={{ margin: "20px" }} className="btn btn-primary" onClick={() => {this.handleStepClick(DIRECTION.RIGHT)}}>RIGHT</button>
                     <button style={{ margin: "20px" }} className="btn btn-primary" onClick={() => {this.handleStepClick(DIRECTION.DOWN)}}>DOWN</button>
+                    {Types.SENTENCE === this.props.type ? <button style={{ margin: "20px" }} className="btn btn-primary" onClick={() => {this.handleStepClick(DIRECTION.CENTER_X)}}>Center_X</button> : <div/>}
 
                 </div>
             </div>

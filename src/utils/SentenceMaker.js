@@ -2,7 +2,7 @@ import Types from './Types.jsx';
 const lineSplitter = '*l*';
 const sentenceSplitter = '*s*';
 
-export function makeSentence(x, y, sentences, lineHeigth, color, fontSize, fontCat, fontStyle){
+export function makeSentence(x, y, sentences, lineHeigth, color, fontSize, fontCat, fontStyle, isXCentered){
     let lines = sentences.split(lineSplitter);
     let elements = [];
     let count = 0;
@@ -16,7 +16,8 @@ export function makeSentence(x, y, sentences, lineHeigth, color, fontSize, fontC
                 fontStyle: fontStyle,
                 text: element,
                 x:x,
-                y:(y+(count*lineHeigth))
+                y:(y+(count*lineHeigth)),
+                isXCentered: isXCentered
             }
         });
         count++;

@@ -67,7 +67,8 @@ export default class DashBoard extends React.Component{
                     color : "red", 
                     fontSize : 20, 
                     fontCat : "LatoWeb", 
-                    fontStyle : "bold"
+                    fontStyle : "bold",
+                    isXCentered : false
                 }
             }
             elements.push(element);
@@ -95,7 +96,7 @@ export default class DashBoard extends React.Component{
             }
             if(element.type === Types.SENTENCE){
                 let payload = element.payload;
-                elements.push(...makeSentence(payload.x, payload.y, payload.sentences, payload.lineHeigth, payload.color, payload.fontSize, payload.fontCat, payload.fontStyle));
+                elements.push(...makeSentence(payload.x, payload.y, payload.sentences, payload.lineHeigth, payload.color, payload.fontSize, payload.fontCat, payload.fontStyle, payload.isXCentered));
             }
         });
         return(
@@ -111,7 +112,7 @@ export default class DashBoard extends React.Component{
                     <div>
                         {this.state.elements.map(element => {
                             // if(element.type === Types.SENTENCE){
-                                return (<Sentence key={element.id} index={element.id} payload = {element.payload} updatePayload = {this.updatePayload}/>);
+                                return (<Sentence key={element.id} index={element.id} type = {element.type} payload = {element.payload} updatePayload = {this.updatePayload}/>);
                             // }
                             // else if(element.type === Types.BULLET_PARA){
                             //     return (<BulletSentences key= {element.id} index={element.id} payload = {element.payload} updatePayload = {this.updatePayload}/>);

@@ -17,7 +17,7 @@ let PIXEL_RATIO = (function () {
 })();
 
 
-function fillText(color, fontSize, fontCat, fontStyle, text, x, y, context) {
+function fillText(color, fontSize, fontCat, fontStyle, text, x, y, context, isXCentered) {
   context.fillStyle = color;
   let font = "";
   if (fontStyle !== null) {
@@ -30,6 +30,10 @@ function fillText(color, fontSize, fontCat, fontStyle, text, x, y, context) {
     font += fontCat;
   }
   context.font = font;
+  if(isXCentered){
+    let textWidth = context.measureText(text).width;
+    x = Math.floor((window.innerWidth / 2) - (textWidth / 2));
+  }
   context.fillText(text, x, y);
   return context;
 }
@@ -45,11 +49,11 @@ function fillCircle(centerX, centerY, radius, color, context) {
 
 function addElement(element, context) {
   if (element.type === Types.TEXT) {
-    let { color, fontSize, fontCat, fontStyle, text, x, y } = element.payload;
+    let { color, fontSize, fontCat, fontStyle, text, x, y, isXCentered } = element.payload;
     if(fontSize === null) {
         fontSize = DEFAULT_FONT_SIZE;
     }
-    return fillText(color, fontSize, fontCat, fontStyle, text, x, y, context);
+    return fillText(color, fontSize, fontCat, fontStyle, text, x, y, context, isXCentered);
   }
   if (element.type === Types.BULLET_TEXT) {
     let { color, fontSize, fontCat, fontStyle, text, x, y, bulletColor } = element.payload;
@@ -60,7 +64,7 @@ function addElement(element, context) {
     let radius = Math.floor(fontSize * 0.6 / 2);
     let centerY = Math.floor(y - radius);
     fillCircle(centerX, centerY, radius, bulletColor, context);
-    return fillText(color, fontSize, fontCat, fontStyle, text, x, y, context);
+    return fillText(color, fontSize, fontCat, fontStyle, text, x, y, context, false);
 
 
   }
