@@ -88,8 +88,8 @@ class CV extends React.Component {
     const canvas = this.canvas.current;
     const context = canvas.getContext("2d");
     // Set display size (css pixels).
-    const sizeW = window.innerWidth;
-    const sizeH = Math.floor(sizeW);
+    let sizeW = window.innerWidth - 100;
+    const sizeH = Math.floor(sizeW * 1.4);
     canvas.style.width = sizeW + "px";
     canvas.style.height = sizeH + "px";
 
@@ -123,8 +123,9 @@ class CV extends React.Component {
 
     const context = canvas.getContext("2d");
     // Set display size (css pixels).
-    const sizeW = window.innerWidth;
-    const sizeH = Math.floor(sizeW);
+    let sizeW = window.innerWidth - 100;
+    const sizeH = Math.floor(sizeW * 1.4);
+    sizeW = sizeW - 100;
     canvas.style.width = sizeW + "px";
     canvas.style.height = sizeH + "px";
 

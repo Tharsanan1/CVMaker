@@ -4,18 +4,44 @@ import Types from '../utils/Types';
 import {makeSentence, makeBulletSentences} from '../utils/SentenceMaker';
 import Sentence from './Sentence';
 import BulletSentences from './BulletSentences';
+import cvJson from './../static/cvJson';
+
+const elementBlackListedKeys = ["reff"]
 
 export default class DashBoard extends React.Component{
     constructor(props){
         super(props);
+        cvJson.forEach(jsonObj => {
+            jsonObj.reff = React.createRef();
+        });
         this.state = {
-            elements : []
+            elements : cvJson
         }
 
         this.addElement = this.addElement.bind(this);
         this.updatePayload = this.updatePayload.bind(this);
         this.delete = this.delete.bind(this);
         this.mouseClickedOn = this.mouseClickedOn.bind(this);
+        this.exportCV = this.exportCV.bind(this);
+    }
+
+    exportCV(){
+        console.log(this.state.elements);
+        let obj = this.state.elements;
+        // let stringified = JSON.stringify(obj);
+        let stringified = JSON.stringify(obj, (key, value) => {
+            console.log("value" , value, "key", key )
+            if(!elementBlackListedKeys.includes(key)){
+                return value;
+            }
+            else {
+                return;
+            };
+            // console.log("value" , value, "key", key )
+            // return value;
+        });
+        console.log(stringified);
+        copyTextToClipboard(stringified);
     }
 
     addElement(type){
@@ -114,16 +140,24 @@ export default class DashBoard extends React.Component{
                 elements.push(...makeSentence(payload.x, payload.y, payload.sentences, payload.lineHeigth, payload.color, payload.fontSize, payload.fontCat, payload.fontStyle, payload.isXCentered));
             }
         });
+        let width = window.innerWidth;
+        let height = window.innerHeight;
+        width = width - 100;
+        console.log(width)
         return(
-            <div>
-                <div style = {{width : window.innerWidth + "px", height: window.innerHeight/2 + "px", overflowY:"auto"}}>
+            <div style={{ margin: "20px" }}>
+
+                <div style = {{width : width + "px", height: height/2 + "px", overflowY:"auto", margin: "20px"}}>
                     <CV elements={elements} mouseClickedOn = {this.mouseClickedOn}/>
                 </div>
-                <div style = {{width : window.innerWidth + "px", height: window.innerHeight/2 + "px", overflowY:"auto"}}>
-                    <div>
+                <div>
                         <button style={{ margin: "20px" }} className="btn btn-primary" onClick = {() => this.addElement(Types.SENTENCE)}>Sentence</button>
                         <button style={{ margin: "20px" }} className="btn btn-primary" onClick = {() => this.addElement(Types.BULLET_PARA)}>Bullet Sentences</button>
+                        <button style={{ margin: "20px" }} className="btn btn-primary" onClick = {() => this.exportCV()}>Export as json</button>
+                        
                     </div>
+                <div style = {{width : width + "px", height: height/2 - 160 + "px", overflowY:"auto"}}>
+                    
                     <div>
                         {this.state.elements.reverse().map(element => {
                             // if(element.type === Types.SENTENCE){
@@ -139,4 +173,41 @@ export default class DashBoard extends React.Component{
             </div>
         );
     }
+}
+
+
+function fallbackCopyTextToClipboard(text) {
+  var textArea = document.createElement("textarea");
+  textArea.value = text;
+  
+  // Avoid scrolling to bottom
+  textArea.style.top = "0";
+  textArea.style.left = "0";
+  textArea.style.position = "fixed";
+
+  document.body.appendChild(textArea);
+  textArea.focus();
+  textArea.select();
+
+  try {
+    var successful = document.execCommand('copy');
+    var msg = successful ? 'successful' : 'unsuccessful';
+    console.log('Fallback: Copying text command was ' + msg);
+  } catch (err) {
+    console.error('Fallback: Oops, unable to copy', err);
+  }
+
+  document.body.removeChild(textArea);
+}
+function copyTextToClipboard(text) {
+  if (!navigator.clipboard) {
+    fallbackCopyTextToClipboard(text);
+    return;
+  }
+  navigator.clipboard.writeText(text).then(function() {
+    console.log('Async: Copying to clipboard was successful!');
+    alert("Copied to clipboard")
+  }, function(err) {
+    console.error('Async: Could not copy text: ', err);
+  });
 }
